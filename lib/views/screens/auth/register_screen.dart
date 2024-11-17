@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marketku/views/helpers/custom_colors.dart';
-import 'package:marketku/views/screens/auth/register_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    void submitSignIn() {
+    void submitSignUp() {
       if (_formKey.currentState!.validate()) {
         print("Success");
       } else {
@@ -19,6 +18,7 @@ class LoginScreen extends StatelessWidget {
       }
     }
 
+    var firstPassword = "";
     return Scaffold(
       backgroundColor: CustomColors.background,
       body: Center(
@@ -39,13 +39,8 @@ class LoginScreen extends StatelessWidget {
                         letterSpacing: 0.2),
                   ),
                   Text(
-                    "Welcome back friend!",
+                    "Come and join us!",
                     style: GoogleFonts.lato(color: Colors.grey, fontSize: 16),
-                  ),
-                  Image.asset(
-                    'assets/images/shopping.png',
-                    width: 250,
-                    height: 300,
                   ),
                   Align(
                     alignment: Alignment.topLeft,
@@ -64,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                         return "Email cannot be empty";
                       }
                       if (!value.contains("@")) {
-                        return "Email is not valid";
+                        return "Email not valid";
                       }
                       return null;
                     },
@@ -98,6 +93,51 @@ class LoginScreen extends StatelessWidget {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
+                      "Name",
+                      style: GoogleFonts.nunitoSans(
+                          fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Name cannot be empty";
+                      }
+                      return null;
+                    },
+                    style: GoogleFonts.nunitoSans(
+                        color: Colors.black, fontSize: 16),
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide:
+                            const BorderSide(color: CustomColors.secondary),
+                      ),
+                      enabledBorder: InputBorder.none,
+                      labelText: "Enter your name",
+                      labelStyle: GoogleFonts.nunitoSans(fontSize: 14),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: SvgPicture.asset(
+                          "assets/icons/ic_name.svg",
+                          width: 5,
+                          height: 5,
+                        ),
+                      ),
+                      focusedBorder: InputBorder.none,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
                       "Password",
                       style: GoogleFonts.nunitoSans(
                           fontSize: 16, fontWeight: FontWeight.w600),
@@ -111,6 +151,10 @@ class LoginScreen extends StatelessWidget {
                       if (value!.isEmpty) {
                         return "Password cannot be empty";
                       }
+                      if (value.length < 6) {
+                        return "Minimum length is 6";
+                      }
+                      firstPassword = value;
                       return null;
                     },
                     style: GoogleFonts.nunitoSans(
@@ -139,19 +183,65 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
+                    height: 16,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Confirm Password",
+                      style: GoogleFonts.nunitoSans(
+                          fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value != firstPassword) {
+                        return "Password is not same";
+                      }
+                      return null;
+                    },
+                    style: GoogleFonts.nunitoSans(
+                        color: Colors.black, fontSize: 16),
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide:
+                            const BorderSide(color: CustomColors.secondary),
+                      ),
+                      enabledBorder: InputBorder.none,
+                      labelText: "Re-enter your password",
+                      labelStyle: GoogleFonts.nunitoSans(fontSize: 14),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: SvgPicture.asset(
+                          "assets/icons/ic_password.svg",
+                          width: 5,
+                          height: 5,
+                        ),
+                      ),
+                      suffixIcon: const Icon(Icons.visibility),
+                      focusedBorder: InputBorder.none,
+                    ),
+                  ),
+                  const SizedBox(
                     height: 32,
                   ),
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
                       onPressed: () {
-                        submitSignIn();
+                        submitSignUp();
                       },
                       style: FilledButton.styleFrom(
                         backgroundColor: CustomColors.primary,
                       ),
                       child: Text(
-                        "Sign In",
+                        "Sign Up",
                         style: GoogleFonts.nunitoSans(
                             fontSize: 16, color: Colors.white),
                       ),
@@ -164,21 +254,16 @@ class LoginScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have acccount?",
+                        "Already have account?",
                         style: GoogleFonts.nunitoSans(
                             color: Colors.black, fontSize: 12),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegisterScreen(),
-                            ),
-                          );
+                          Navigator.pop(context);
                         },
                         child: Text(
-                          "Create new account",
+                          "Click here",
                           style: GoogleFonts.nunitoSans(
                               color: CustomColors.primary, fontSize: 12),
                         ),
