@@ -43,4 +43,8 @@ class User {
         city: map['city'] as String? ?? "",
         fullAddress: map['fullAddress'] as String? ?? "");
   }
+
+  //convert map to user object
+  factory User.fromJson(String source) =>
+      User.fromMap(jsonDecode(source) as Map<String, dynamic>);
 }
