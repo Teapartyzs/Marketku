@@ -1,18 +1,32 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:marketku/controllers/auth_controller.dart';
 import 'package:marketku/views/helpers/custom_colors.dart';
 import 'package:marketku/views/screens/auth/register_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final AuthController _authController = AuthController();
 
   @override
   Widget build(BuildContext context) {
+    late String email;
+    late String password;
     void submitSignIn() {
       if (_formKey.currentState!.validate()) {
+        _authController.signInUser(
+            context: context, email: email, password: password);
         print("Success");
       } else {
         print("Failed");
@@ -59,6 +73,7 @@ class LoginScreen extends StatelessWidget {
                     height: 8,
                   ),
                   TextFormField(
+                    onChanged: (value) => email = value,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Email cannot be empty";
@@ -107,6 +122,7 @@ class LoginScreen extends StatelessWidget {
                     height: 8,
                   ),
                   TextFormField(
+                    onChanged: (value) => password = value,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Password cannot be empty";

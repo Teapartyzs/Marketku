@@ -7,6 +7,7 @@ class User {
   final String password;
   final String city;
   final String fullAddress;
+  final String token;
 
   User(
       {required this.id,
@@ -14,7 +15,8 @@ class User {
       required this.email,
       required this.password,
       required this.city,
-      required this.fullAddress});
+      required this.fullAddress,
+      required this.token});
 
   //serialization
   //convert user object to map
@@ -26,6 +28,7 @@ class User {
       "password": password,
       "city": city,
       "fullAddress": fullAddress,
+      "token": token,
     };
   }
 
@@ -41,7 +44,8 @@ class User {
         email: map['email'] as String? ?? "",
         password: map['password'] as String? ?? "",
         city: map['city'] as String? ?? "",
-        fullAddress: map['fullAddress'] as String? ?? "");
+        fullAddress: map['fullAddress'] as String? ?? "",
+        token: map['token'] as String? ?? "");
   }
 
   //convert map to user object
