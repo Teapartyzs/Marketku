@@ -23,11 +23,20 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     late String email;
     late String password;
+    bool isLoading = false;
     void submitSignIn() {
       if (_formKey.currentState!.validate()) {
-        _authController.signInUser(
-            context: context, email: email, password: password);
-        print("Success");
+        setState(() {
+          isLoading = true;
+        });
+        _authController
+            .signInUser(context: context, email: email, password: password)
+            .whenComplete(() {
+          _formKey.currentState!.reset();
+          setState(() {
+            isLoading = false;
+          });
+        });
       } else {
         print("Failed");
       }
@@ -157,22 +166,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 32,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: () {
-                        submitSignIn();
-                      },
-                      style: FilledButton.styleFrom(
-                        backgroundColor: CustomColors.primary,
-                      ),
-                      child: Text(
-                        "Sign In",
-                        style: GoogleFonts.nunitoSans(
-                            fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                  ),
+                  isLoading
+                      ? const CircularProgressIndicator()
+                      : SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            onPressed: () {
+                              submitSignIn();
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: CustomColors.primary,
+                            ),
+                            child: Text(
+                              "Sign In",
+                              style: GoogleFonts.nunitoSans(
+                                  fontSize: 16, color: Colors.white),
+                            ),
+                          ),
+                        ),
                   const SizedBox(
                     height: 16,
                   ),

@@ -5,6 +5,8 @@ import 'package:marketku/global_variables.dart';
 import 'package:marketku/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:marketku/services/http_response.dart';
+import 'package:marketku/views/screens/auth/login_screen.dart';
+import 'package:marketku/views/screens/dashboard/dashboard_screen.dart';
 
 class AuthController {
   Future<void> signUpUser({
@@ -31,6 +33,13 @@ class AuthController {
           response: response,
           context: context,
           onSuccess: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+              (route) => false,
+            );
             showSnackBar(context, "Create account success!");
           });
     } catch (e) {
@@ -53,6 +62,11 @@ class AuthController {
           response: response,
           context: context,
           onSuccess: () {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DashboardScreen()),
+                (route) => false);
             showSnackBar(context, "Sign in success, welcome!");
           });
     } catch (e) {}

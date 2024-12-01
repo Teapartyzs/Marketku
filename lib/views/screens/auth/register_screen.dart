@@ -17,15 +17,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late String email;
   late String fullname;
   late String password;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     void submitSignUp() async {
       if (_formKey.currentState!.validate()) {
-        await _authController.signUpUser(
-            context: context,
-            email: email,
-            fullname: fullname,
-            password: password);
+        setState(() {
+          isLoading = true;
+        });
+        await _authController
+            .signUpUser(
+                context: context,
+                email: email,
+                fullname: fullname,
+                password: password)
+            .whenComplete(() {
+          _formKey.currentState!.reset();
+          setState(() {
+            isLoading = false;
+          });
+        });
         print("Success");
       } else {
         print("Failed");
@@ -248,22 +259,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(
                     height: 32,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: () {
-                        submitSignUp();
-                      },
-                      style: FilledButton.styleFrom(
-                        backgroundColor: CustomColors.primary,
-                      ),
-                      child: Text(
-                        "Sign Up",
-                        style: GoogleFonts.nunitoSans(
-                            fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                  ),
+                  isLoading
+                      ? const CircularProgressIndicator()
+                      : SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            onPressed: () {
+                              submitSignUp();
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: CustomColors.primary,
+                            ),
+                            child: Text(
+                              "Sign Up",
+                              style: GoogleFonts.nunitoSans(
+                                  fontSize: 16, color: Colors.white),
+                            ),
+                          ),
+                        ),
                   const SizedBox(
                     height: 16,
                   ),
