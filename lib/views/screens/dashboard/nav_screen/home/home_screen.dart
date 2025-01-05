@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:marketku/views/widgets/banner_widget.dart';
 import 'package:marketku/views/widgets/header.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,7 +9,7 @@ class HomeScreen extends StatelessWidget {
     return const Scaffold(
       body: SingleChildScrollView(
         child: Column(
-          children: [Header()],
+          children: [Header(), BannerWidget()],
         ),
       ),
     );
