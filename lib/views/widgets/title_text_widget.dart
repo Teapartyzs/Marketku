@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 class TitleTextWidget extends StatelessWidget {
   const TitleTextWidget(
-      {super.key, required this.title, required this.subtitle});
+      {super.key,
+      required this.title,
+      required this.subtitle,
+      required this.onClickSubTitle});
 
   final String title;
   final String subtitle;
+  final void Function() onClickSubTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +26,15 @@ class TitleTextWidget extends StatelessWidget {
           const SizedBox(
             width: 16,
           ),
-          Text(
-            subtitle,
-            style: const TextStyle(
-                color: Colors.blueAccent,
-                fontSize: 14,
-                fontWeight: FontWeight.w600),
+          InkWell(
+            child: Text(subtitle,
+                style: const TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600)),
+            onTap: () {
+              onClickSubTitle();
+            },
           )
         ],
       ),

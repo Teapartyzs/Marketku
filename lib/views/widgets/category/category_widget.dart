@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../models/category.dart';
+import '../../../models/category.dart';
 
 class CategoryWidget extends StatefulWidget {
   const CategoryWidget(
