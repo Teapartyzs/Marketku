@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:marketku/controllers/category_controller.dart';
 import 'package:marketku/controllers/dio_controller.dart';
 import 'package:marketku/global_variables.dart';
+import 'package:marketku/views/screens/product/product_screen.dart';
 import 'package:marketku/views/widgets/category/category_text_widget.dart';
 import 'package:marketku/views/widgets/category_sub/category_sub_widget.dart';
-import 'package:marketku/views/widgets/header.dart';
+import 'package:marketku/views/widgets/header_with_back.dart';
 
 import '../../../models/category.dart';
 import '../../../models/category_sub.dart';
@@ -50,7 +52,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       appBar: PreferredSize(
           preferredSize:
               Size.fromHeight(MediaQuery.sizeOf(context).height * 20),
-          child: const Header()),
+          child: const HeaderWithBack()),
       body: Row(
         children: [
           Expanded(
@@ -101,6 +103,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           ),
                           CategorySubWidget(
                             categorySubData: categorySubData,
+                            onClick: (value) {
+                              Get.to(
+                                ProductScreen(
+                                  categorySubData: value,
+                                ),
+                              );
+                            },
                           )
                         ],
                       )

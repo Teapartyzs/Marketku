@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:marketku/models/category_sub.dart';
 
 class CategorySubWidget extends StatefulWidget {
-  const CategorySubWidget({super.key, required this.categorySubData});
+  const CategorySubWidget(
+      {super.key, required this.categorySubData, required this.onClick});
 
   final Future<List<CategorySub>> categorySubData;
+  final void Function(CategorySub?) onClick;
 
   @override
   State<CategorySubWidget> createState() => _CategorySubWidgetState();
@@ -39,30 +41,35 @@ class _CategorySubWidgetState extends State<CategorySubWidget> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3, crossAxisSpacing: 3, mainAxisSpacing: 3),
                 itemBuilder: (context, index) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Image.network(
-                          data[index].image,
-                          width: 150,
-                          height: 150,
+                  return InkWell(
+                    onTap: () {
+                      widget.onClick(snapshot.data![index]);
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: Image.network(
+                            data[index].image,
+                            width: 150,
+                            height: 150,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 150),
-                        child: Text(
-                          data[index].subCategoryName,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 12),
-                          textAlign: TextAlign.center,
+                        const SizedBox(
+                          height: 8,
                         ),
-                      ),
-                    ],
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 150),
+                          child: Text(
+                            data[index].subCategoryName,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 12),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 });
           }
