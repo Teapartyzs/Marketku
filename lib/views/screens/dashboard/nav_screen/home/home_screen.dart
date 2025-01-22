@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
-import 'package:marketku/controllers/category_controller.dart';
+import 'package:marketku/controllers/state/use_category.dart';
+import 'package:marketku/views/screens/category/category_all_screen.dart';
 import 'package:marketku/views/screens/category/category_screen.dart';
 import 'package:marketku/views/widgets/banner_widget.dart';
 import 'package:marketku/views/widgets/category/category_widget.dart';
@@ -17,13 +17,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final CategoryController _categoryController = CategoryController();
+  final UseCategory _useCategory = UseCategory();
   late Future<List<Category>> categoryData;
 
   @override
   void initState() {
     super.initState();
-    categoryData = _categoryController.loadCategory();
+    _useCategory.onGetCategory();
   }
 
   @override
@@ -38,13 +38,16 @@ class _HomeScreenState extends State<HomeScreen> {
               title: "Categories",
               subtitle: "View all",
               onClickSubTitle: () {
-                Get.to(() => const CategoryScreen());
+                Get.to(() => const CategoryAllScreen());
               },
             ),
             CategoryWidget(
-                categoryData: categoryData,
-                isNotSub: true,
-                onCategorySelect: (categorySelected) {})
+              categoryData: _useCategory.category!,
+              isNotSub: true,
+              onCategorySelect: (categorySelected) {
+                Get.to(CategoryScreen(category: categorySelected!));
+              },
+            )
           ],
         ),
       ),

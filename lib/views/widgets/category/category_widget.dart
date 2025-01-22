@@ -49,22 +49,25 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       crossAxisSpacing: 8,
                       mainAxisSpacing: 8),
                   itemBuilder: (context, index) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: Image.network(
-                              height: 50, width: 50, category[index].image),
-                        ),
-                        Text(
-                          category[index].name,
-                          style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
+                    return InkWell(
+                      onTap: () => widget.onCategorySelect(category[index]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Image.network(
+                                height: 50, width: 50, category[index].image),
+                          ),
+                          Text(
+                            category[index].name,
+                            style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
                     );
                   },
                 )

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketku/controllers/auth_controller.dart';
+import 'package:marketku/controllers/network/auth_controller.dart';
 import 'package:marketku/views/helpers/custom_colors.dart';
 
 class RegisterScreen extends StatefulWidget {
