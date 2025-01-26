@@ -50,10 +50,14 @@ class _CategorySubWidgetState extends State<CategorySubWidget> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Flexible(
-                          child: Image.network(
-                            data[index].image,
-                            width: 150,
-                            height: 150,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              data[index].image,
+                              width: 45,
+                              height: 45,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         const SizedBox(
@@ -64,7 +68,7 @@ class _CategorySubWidgetState extends State<CategorySubWidget> {
                           child: Text(
                             data[index].subCategoryName,
                             style: const TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 12),
+                                fontWeight: FontWeight.w600, fontSize: 11),
                             textAlign: TextAlign.center,
                           ),
                         ),

@@ -1,3 +1,4 @@
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:marketku/controllers/state/use_category.dart';
@@ -29,10 +30,26 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarWithSearchSwitch(
+          onChanged: (value) {},
+          appBarBuilder: (context) {
+            return AppBar(
+              actions: const [
+                Row(
+                  children: [
+                    AppBarSearchButton(),
+                    Icon(Icons.notifications),
+                    SizedBox(
+                      width: 16,
+                    )
+                  ],
+                )
+              ],
+            );
+          }),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Header(),
             const BannerWidget(),
             TitleTextWidget(
               title: "Categories",

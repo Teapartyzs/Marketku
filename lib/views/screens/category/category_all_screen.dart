@@ -1,3 +1,4 @@
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:marketku/controllers/network/category_controller.dart';
@@ -49,11 +50,16 @@ class _CategoryAllScreenState extends State<CategoryAllScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.sizeOf(context).height * 20),
-          child: const HeaderWithBack()),
+      appBar: AppBarWithSearchSwitch(
+        onChanged: (value) {},
+        appBarBuilder: (context) {
+          return AppBar(
+              title: const Text("All Category"),
+              actions: const [AppBarSearchButton()]);
+        },
+      ),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 1,
@@ -76,44 +82,47 @@ class _CategoryAllScreenState extends State<CategoryAllScreen> {
           ),
           Expanded(
             flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: selectedCategory != null
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          selectedCategory!.name,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Container(
-                          height: 150,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(selectedCategory!.banner),
-                                fit: BoxFit.scaleDown),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: selectedCategory != null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            selectedCategory!.name,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        CategorySubWidget(
-                          categorySubData: categorySubData,
-                          onClick: (value) {
-                            Get.to(
-                              ProductScreen(
-                                categorySubData: value,
-                              ),
-                            );
-                          },
-                        )
-                      ],
-                    )
-                  : Container(),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Container(
+                            height: 150,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(selectedCategory!.banner),
+                                  fit: BoxFit.scaleDown),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          CategorySubWidget(
+                            categorySubData: categorySubData,
+                            onClick: (value) {
+                              Get.to(
+                                ProductScreen(
+                                  categorySubData: value,
+                                ),
+                              );
+                            },
+                          )
+                        ],
+                      )
+                    : Container(),
+              ),
             ),
           )
         ],

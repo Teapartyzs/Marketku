@@ -1,3 +1,4 @@
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:marketku/controllers/state/use_category_sub.dart';
@@ -27,46 +28,47 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.sizeOf(context).height * 20),
-          child: const HeaderWithBack()),
-      body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.category.name,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Container(
-                height: 150,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(widget.category.banner),
-                      fit: BoxFit.scaleDown),
+      appBar: AppBarWithSearchSwitch(
+          onChanged: (value) {},
+          appBarBuilder: (context) {
+            return AppBar(
+              title: Text(widget.category.name),
+              actions: const [AppBarSearchButton()],
+            );
+          }),
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 8,
                 ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              CategorySubWidget(
-                categorySubData: _useCategorySub.categorySub!,
-                onClick: (value) {
-                  Get.to(
-                    ProductScreen(
-                      categorySubData: value,
-                    ),
-                  );
-                },
-              )
-            ],
-          )),
+                Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(widget.category.banner),
+                        fit: BoxFit.scaleDown),
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                CategorySubWidget(
+                  categorySubData: _useCategorySub.categorySub!,
+                  onClick: (value) {
+                    Get.to(
+                      ProductScreen(
+                        categorySubData: value,
+                      ),
+                    );
+                  },
+                )
+              ],
+            )),
+      ),
     );
   }
 }

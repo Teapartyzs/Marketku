@@ -42,6 +42,7 @@ dependencies:
   dio: ^5.7.0
   cloudinary_public: ^0.23.1
   get: ^4.6.6
+  app_bar_with_search_switch: ^1.8.6
 
 dev_dependencies:
   flutter_test:
