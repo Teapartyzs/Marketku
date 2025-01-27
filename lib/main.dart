@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:marketku/providers/user_provider.dart';
 import 'package:marketku/views/screens/auth/login_screen.dart';
 import 'package:marketku/views/screens/dashboard/dashboard_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+//use consumer widget to use state from riverpod
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
+
+  Future<void> _checkUserData(WidgetRef ref) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final token = preferences.getString("token");
+    final userJson = preferences.getString("user");
+
+    if (token != null && userJson != null) {
+      ref.read(userProvider.notifier).setUser(userJson);
+    }
+  }
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -34,7 +48,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DashboardScreen(),
+      home: FutureBuilder(
+          future: _checkUserData(ref),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final user = ref.watch(userProvider);
+            return user != null ? const DashboardScreen() : const LoginScreen();
+          }),
     );
   }
 }

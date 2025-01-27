@@ -1,12 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/global_variables.dart';
 import 'package:marketku/models/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:marketku/providers/user_provider.dart';
 import 'package:marketku/services/http_response.dart';
 import 'package:marketku/views/screens/auth/login_screen.dart';
 import 'package:marketku/views/screens/dashboard/dashboard_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final providerContainer = ProviderContainer();
 
 class AuthController {
   Future<void> signUpUser({
@@ -61,7 +66,23 @@ class AuthController {
       httpResponse(
           response: response,
           context: context,
-          onSuccess: () {
+          onSuccess: () async {
+            //initialize
+            SharedPreferences preferences =
+                await SharedPreferences.getInstance();
+
+            //get the token from response
+            final token = jsonDecode(response.body)['token'];
+            //store token to shared preferences
+            await preferences.setString("token", token);
+
+            //encode to json string
+            final userJson = jsonEncode(jsonDecode(response.body)["user"]);
+            //update riverpod
+            providerContainer.read(userProvider.notifier).setUser(userJson);
+            //save user data to shared preferences
+            await preferences.setString("user", userJson);
+
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
