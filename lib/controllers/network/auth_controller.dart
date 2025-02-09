@@ -92,4 +92,18 @@ class AuthController {
           });
     } catch (e) {}
   }
+
+  Future<void> signOut(
+      {required VoidCallback onSuccess,
+      required void Function(Exception) onFailed}) async {
+    try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.remove("token");
+      preferences.remove("user");
+      providerContainer.read(userProvider.notifier).signOut();
+      onSuccess();
+    } catch (e) {
+      onFailed(throw Exception(e));
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/models/user.dart';
 
-class UserProvider extends StateNotifier<User> {
+class UserProvider extends StateNotifier<User?> {
   UserProvider()
       : super(
           User(
@@ -18,6 +18,10 @@ class UserProvider extends StateNotifier<User> {
   //update state from json string
   void setUser(String sourceJson) {
     state = User.fromJson(sourceJson);
+  }
+
+  void signOut() {
+    state = null;
   }
 }
 
