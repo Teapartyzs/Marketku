@@ -1,42 +1,48 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marketku/controllers/network/auth_controller.dart';
+import 'package:marketku/repository/auth_repository.dart';
+import 'package:marketku/repository/loading_provider.dart';
 import 'package:marketku/views/helpers/custom_colors.dart';
 import 'package:marketku/views/screens/auth/register_screen.dart';
+import 'package:marketku/views/screens/dashboard/dashboard_screen.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final AuthController _authController = AuthController();
 
-class _LoginScreenState extends State<LoginScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  final AuthController _authController = AuthController();
-
-  @override
-  Widget build(BuildContext context) {
     late String email;
     late String password;
-    bool isLoading = false;
-    void submitSignIn() {
+    bool isLoading = ref.watch(isLoadingProvider);
+    void submitSignIn() async {
       if (_formKey.currentState!.validate()) {
-        setState(() {
-          isLoading = true;
-        });
-        _authController
-            .signInUser(context: context, email: email, password: password)
-            .whenComplete(() {
-          _formKey.currentState!.reset();
-          setState(() {
-            isLoading = false;
-          });
-        });
-      } else {
-        print("Failed");
+        ref.read(isLoadingProvider.notifier).state = true;
+
+        try {
+          await ref.read(loginProvider(email, password).future);
+          if (!context.mounted) return;
+          ref.read(isLoadingProvider.notifier).state = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Login success!")),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DashboardScreen()),
+          );
+        } catch (e) {
+          ref.read(isLoadingProvider.notifier).state = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Login failed: ${e.toString()}")),
+          );
+        }
       }
     }
 
@@ -129,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 8,
                   ),
                   TextFormField(
+                    obscureText: true,
                     onChanged: (value) => password = value,
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -198,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RegisterScreen(),
+                              builder: (context) => const RegisterScreen(),
                             ),
                           );
                         },

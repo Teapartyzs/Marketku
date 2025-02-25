@@ -5,7 +5,6 @@ import 'package:marketku/controllers/state/use_category_sub.dart';
 import 'package:marketku/models/category.dart';
 import 'package:marketku/views/screens/product/product_screen.dart';
 import 'package:marketku/views/widgets/category_sub/category_sub_widget.dart';
-import 'package:marketku/views/widgets/header_with_back.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key, required this.category});

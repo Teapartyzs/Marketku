@@ -1,5 +1,21 @@
 import 'package:dio/dio.dart';
 
+final dio = Dio();
+
+extension DioControllerExtension on String {
+  Future<void> postData<T>(
+      Map map, void Function(T data, String message) onSuccess) async {
+    try {
+      final response = await dio.post(this, data: map);
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        onSuccess(response.data, response.statusMessage!);
+      }
+    } on DioException catch (e) {
+      throw Exception(e.response?.data.toString() ?? "Failed to send data");
+    }
+  }
+}
+
 class DioController {
   Future<List<T>> getDataList<T>(
       {required String url,

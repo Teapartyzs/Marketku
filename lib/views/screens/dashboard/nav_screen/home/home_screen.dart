@@ -6,7 +6,6 @@ import 'package:marketku/views/screens/category/category_all_screen.dart';
 import 'package:marketku/views/screens/category/category_screen.dart';
 import 'package:marketku/views/widgets/banner_widget.dart';
 import 'package:marketku/views/widgets/category/category_widget.dart';
-import 'package:marketku/views/widgets/header.dart';
 import 'package:marketku/views/widgets/title_text_widget.dart';
 import '../../../../../models/category.dart';
 

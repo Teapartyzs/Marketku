@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/global_variables.dart';
 import 'package:marketku/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:marketku/providers/user_provider.dart';
+import 'package:marketku/repository/user_provider.dart';
 import 'package:marketku/services/http_response.dart';
 import 'package:marketku/views/screens/auth/login_screen.dart';
 import 'package:marketku/views/screens/dashboard/dashboard_screen.dart';

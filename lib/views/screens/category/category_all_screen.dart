@@ -7,7 +7,6 @@ import 'package:marketku/global_variables.dart';
 import 'package:marketku/views/screens/product/product_screen.dart';
 import 'package:marketku/views/widgets/category/category_text_widget.dart';
 import 'package:marketku/views/widgets/category_sub/category_sub_widget.dart';
-import 'package:marketku/views/widgets/header_with_back.dart';
 
 import '../../../models/category.dart';
 import '../../../models/category_sub.dart';
