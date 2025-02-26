@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:marketku/repository/user_provider.dart';
+import 'package:marketku/providers/user/user_provider.dart';
 import 'package:marketku/views/screens/auth/login_screen.dart';
 import 'package:marketku/views/screens/dashboard/dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';

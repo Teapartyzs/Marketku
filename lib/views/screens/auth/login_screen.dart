@@ -1,11 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketku/controllers/network/auth_controller.dart';
-import 'package:marketku/repository/auth_repository.dart';
-import 'package:marketku/repository/loading_provider.dart';
+import 'package:marketku/repository/auth/auth_repository.dart';
+import 'package:marketku/providers/loading/loading_provider.dart';
 import 'package:marketku/views/helpers/custom_colors.dart';
 import 'package:marketku/views/screens/auth/register_screen.dart';
 import 'package:marketku/views/screens/dashboard/dashboard_screen.dart';
@@ -15,14 +13,13 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final AuthController _authController = AuthController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     late String email;
     late String password;
     bool isLoading = ref.watch(isLoadingProvider);
     void submitSignIn() async {
-      if (_formKey.currentState!.validate()) {
+      if (formKey.currentState!.validate()) {
         ref.read(isLoadingProvider.notifier).state = true;
 
         try {
@@ -53,7 +50,7 @@ class LoginScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

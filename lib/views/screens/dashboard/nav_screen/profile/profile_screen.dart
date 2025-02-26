@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:marketku/controllers/network/auth_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:marketku/repository/auth/auth_repository.dart';
 import 'package:marketku/views/screens/auth/login_screen.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  final AuthController _authController = AuthController();
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: Scaffold(
         body: FilledButton(
-            onPressed: () {
-              _authController.signOut(onSuccess: () {
-                Get.offAll(const LoginScreen());
-              }, onFailed: (e) {
-                Get.snackbar("Error", e.toString());
-              });
+            onPressed: () async {
+              try {
+                await ref.read(signOutProvider.future);
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Logout success")));
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const LoginScreen()));
+              } catch (e) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(e.toString())));
+              }
             },
             child: const Text("Logout")),
       ),

@@ -1,45 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketku/controllers/network/auth_controller.dart';
+import 'package:marketku/providers/loading/loading_provider.dart';
+import 'package:marketku/repository/auth/auth_repository.dart';
 import 'package:marketku/views/helpers/custom_colors.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends ConsumerWidget {
   const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
-}
-
-class _RegisterScreenState extends State<RegisterScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthController _authController = AuthController();
-  late String email;
-  late String fullname;
-  late String password;
-  bool isLoading = false;
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    late String email;
+    late String fullname;
+    late String password;
+    bool isLoading = ref.watch(isLoadingProvider);
     void submitSignUp() async {
       if (_formKey.currentState!.validate()) {
-        setState(() {
-          isLoading = true;
-        });
-        await _authController
-            .signUpUser(
-                context: context,
-                email: email,
-                fullname: fullname,
-                password: password)
-            .whenComplete(() {
-          _formKey.currentState!.reset();
-          setState(() {
-            isLoading = false;
-          });
-        });
-        print("Success");
-      } else {
-        print("Failed");
+        ref.read(isLoadingProvider.notifier).state = true;
+        try {
+          await ref.read(registerProvider(fullname, email, password).future);
+          if (!context.mounted) return;
+          ref.read(isLoadingProvider.notifier).state = false;
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Register success")));
+          Navigator.pop(context);
+        } catch (e) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(e.toString())));
+        }
       }
     }
 
@@ -174,6 +164,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 8,
                   ),
                   TextFormField(
+                    obscureText: true,
                     onChanged: (value) => password = value,
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -225,6 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 8,
                   ),
                   TextFormField(
+                    obscureText: true,
                     validator: (value) {
                       if (value != firstPassword) {
                         return "Password is not same";
