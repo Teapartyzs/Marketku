@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:marketku/repository/auth/auth_repository.dart';
+import 'package:marketku/controllers/network/auth/auth_repository.dart';
 import 'package:marketku/views/screens/auth/login_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {

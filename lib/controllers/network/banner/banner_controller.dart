@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:marketku/global_variables.dart';
-import 'package:marketku/models/banner_model.dart';
+import 'package:marketku/models/banner/banner_model.dart';
 import 'package:http/http.dart' as http;
 
 class BannerController {

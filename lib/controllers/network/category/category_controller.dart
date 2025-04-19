@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:marketku/global_variables.dart';
-import 'package:marketku/models/category.dart';
+import 'package:marketku/models/category/category.dart';
 import 'package:http/http.dart' as http;
 
 class CategoryController {

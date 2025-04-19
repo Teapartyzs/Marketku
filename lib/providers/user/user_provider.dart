@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:marketku/models/user.dart';
+import 'package:marketku/models/user/user.dart';
 
 class UserProvider extends StateNotifier<User?> {
   UserProvider()

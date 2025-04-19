@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:marketku/models/category_sub.dart';
+import 'package:marketku/models/category_sub/category_sub.dart';
 
 class CategorySubWidget extends StatefulWidget {
   const CategorySubWidget(

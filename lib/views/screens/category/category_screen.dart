@@ -2,7 +2,7 @@ import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:marketku/controllers/state/use_category_sub.dart';
-import 'package:marketku/models/category.dart';
+import 'package:marketku/models/category/category.dart';
 import 'package:marketku/views/screens/product/product_screen.dart';
 import 'package:marketku/views/widgets/category_sub/category_sub_widget.dart';
 

@@ -1,15 +1,15 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:marketku/controllers/network/category_controller.dart';
-import 'package:marketku/controllers/network/dio_controller.dart';
+import 'package:marketku/controllers/network/category/category_controller.dart';
+import 'package:marketku/controllers/network/category_sub/category_sub_controller.dart';
 import 'package:marketku/global_variables.dart';
 import 'package:marketku/views/screens/product/product_screen.dart';
 import 'package:marketku/views/widgets/category/category_text_widget.dart';
 import 'package:marketku/views/widgets/category_sub/category_sub_widget.dart';
 
-import '../../../models/category.dart';
-import '../../../models/category_sub.dart';
+import '../../../models/category/category.dart';
+import '../../../models/category_sub/category_sub.dart';
 
 class CategoryAllScreen extends StatefulWidget {
   const CategoryAllScreen({super.key});
@@ -23,27 +23,32 @@ class _CategoryAllScreenState extends State<CategoryAllScreen> {
   late Future<List<Category>> categoryData;
   Category? selectedCategory;
 
-  final DioController _dioController = DioController();
+  final CategorySubController _categorySubController = CategorySubController();
   late Future<List<CategorySub>> categorySubData;
 
   @override
   void initState() {
     super.initState();
     categoryData = _categoryController.loadCategory();
-    categoryData.then((categories) {
-      for (int i = 0; i < categories.length; i++) {
-        var category = categories[i];
-        if (i == 0) {
-          setState(() {
-            selectedCategory = category;
-            categorySubData = _dioController.getDataList(
-                url: "$ip/api/category/${selectedCategory!.name}/categorysub",
-                fromJson: (value) => CategorySub.fromJson(value));
-          });
-          break;
+    categoryData.then(
+      (categories) {
+        for (int i = 0; i < categories.length; i++) {
+          var category = categories[i];
+          if (i == 0) {
+            setState(
+              () {
+                selectedCategory = category;
+                if (selectedCategory != null) {
+                  categorySubData = _categorySubController
+                      .onGetAllCategorySub(selectedCategory!.name);
+                }
+              },
+            );
+            break;
+          }
         }
-      }
-    });
+      },
+    );
   }
 
   @override
@@ -66,13 +71,13 @@ class _CategoryAllScreenState extends State<CategoryAllScreen> {
               color: Colors.grey.shade200,
               child: CategoryTextWidget(
                 categoryData: categoryData,
-                onSelected: (value) {
+                onSelected: (value) async {
                   setState(() {
                     selectedCategory = value;
-                    categorySubData = _dioController.getDataList<CategorySub>(
-                        url:
-                            "$ip/api/category/${selectedCategory!.name}/categorysub",
-                        fromJson: (json) => CategorySub.fromJson(json));
+                    if (selectedCategory != null) {
+                      categorySubData = _categorySubController
+                          .onGetAllCategorySub(selectedCategory!.name);
+                    }
                   });
                 },
                 currentSelectedValue: selectedCategory,

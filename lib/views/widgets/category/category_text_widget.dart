@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/category.dart';
+import '../../../models/category/category.dart';
 
 class CategoryTextWidget extends StatefulWidget {
   const CategoryTextWidget(

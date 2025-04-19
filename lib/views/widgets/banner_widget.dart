@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:marketku/controllers/network/banner_controller.dart';
-import 'package:marketku/models/banner_model.dart';
+import 'package:marketku/controllers/network/banner/banner_controller.dart';
+import 'package:marketku/models/banner/banner_model.dart';
 import 'package:marketku/views/helpers/custom_colors.dart';
 
 class BannerWidget extends StatefulWidget {

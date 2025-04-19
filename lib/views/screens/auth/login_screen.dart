@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketku/repository/auth/auth_repository.dart';
+import 'package:marketku/controllers/network/auth/auth_repository.dart';
 import 'package:marketku/providers/loading/loading_provider.dart';
 import 'package:marketku/views/helpers/custom_colors.dart';
 import 'package:marketku/views/screens/auth/register_screen.dart';
