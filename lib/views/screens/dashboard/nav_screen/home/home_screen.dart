@@ -1,11 +1,16 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:get/get.dart';
-import 'package:marketku/controllers/state/use_category.dart';
+import 'package:marketku/controllers/network/category/category_controller.dart';
+import 'package:marketku/controllers/network/product/product_controller.dart';
+import 'package:marketku/models/product/product.dart';
 import 'package:marketku/views/screens/category/category_all_screen.dart';
 import 'package:marketku/views/screens/category/category_screen.dart';
 import 'package:marketku/views/widgets/banner_widget.dart';
 import 'package:marketku/views/widgets/category/category_widget.dart';
+import 'package:marketku/views/widgets/future_builder/future_builder_setup.dart';
+import 'package:marketku/views/widgets/list/grid_builder.dart';
 import 'package:marketku/views/widgets/title_text_widget.dart';
 import '../../../../../models/category/category.dart';
 
@@ -17,13 +22,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final UseCategory _useCategory = UseCategory();
+  final CategoryController _categoryController = CategoryController();
+  final ProductController _productController = ProductController();
   late Future<List<Category>> categoryData;
+  late Future<List<Product>> productData;
 
   @override
   void initState() {
     super.initState();
-    _useCategory.onGetCategory();
+    categoryData = _categoryController.loadCategory();
+    productData = _productController.getAllProduct();
   }
 
   @override
@@ -58,12 +66,26 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             CategoryWidget(
-              categoryData: _useCategory.category!,
+              categoryData: categoryData,
               isNotSub: true,
               onCategorySelect: (categorySelected) {
                 Get.to(CategoryScreen(category: categorySelected!));
               },
-            )
+            ),
+            TitleTextWidget(
+                title: "Popular", subtitle: "View all", onClickSubTitle: () {}),
+            FutureBuilderSetup<List<Product>>(
+              data: productData,
+              onSuccess: (products) {
+                return GridBuilder(
+                  data: products,
+                  onTapAction: (product) {},
+                  onBuild: (product) {
+                    return Text(product.fullname);
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),

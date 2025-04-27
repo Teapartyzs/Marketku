@@ -1,15 +1,43 @@
-import 'package:dio/dio.dart';
+import 'dart:io';
 
-final dio = Dio();
+import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+
+Dio getDio() {
+  final dio = Dio();
+
+  dio.httpClientAdapter = IOHttpClientAdapter(
+    createHttpClient: () {
+      final client = HttpClient();
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    },
+  );
+
+  return dio;
+}
 
 extension DioControllerExtension on String {
   Future<void> postData<T>(
       Map map, void Function(T data, String message) onSuccess) async {
     try {
-      final response = await dio.post(this, data: map);
+      final response = await getDio().post(this, data: map);
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
         onSuccess(response.data, response.statusMessage!);
       }
+    } on DioException catch (e) {
+      throw Exception(e.response?.data.toString() ?? "Failed to send data");
+    }
+  }
+
+  Future<List<T>> getDataList<T>(
+      T Function(Map<String, dynamic>) fromJson) async {
+    try {
+      final response = await getDio().get(this);
+      final List<dynamic> rawData = response.data;
+      final List<T> result = rawData.map((value) => fromJson(value)).toList();
+      return result;
     } on DioException catch (e) {
       throw Exception(e.response?.data.toString() ?? "Failed to send data");
     }
@@ -21,8 +49,7 @@ class DioController {
       {required String url,
       required T Function(Map<String, dynamic>) fromJson}) async {
     try {
-      final dio = Dio();
-      final response = await dio.get(url);
+      final response = await getDio().get(url);
       if (response.statusCode == 200) {
         if (response.data != null) {
           List<dynamic> decodeData = response.data;
