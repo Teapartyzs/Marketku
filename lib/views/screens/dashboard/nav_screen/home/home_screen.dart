@@ -11,6 +11,7 @@ import 'package:marketku/views/widgets/banner_widget.dart';
 import 'package:marketku/views/widgets/category/category_widget.dart';
 import 'package:marketku/views/widgets/future_builder/future_builder_setup.dart';
 import 'package:marketku/views/widgets/list/grid_builder.dart';
+import 'package:marketku/views/widgets/product/item_product.dart';
 import 'package:marketku/views/widgets/title_text_widget.dart';
 import '../../../../../models/category/category.dart';
 
@@ -81,8 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   data: products,
                   onTapAction: (product) {},
                   onBuild: (product) {
-                    return Text(product.fullname);
+                    return ItemProduct(product: product);
                   },
+                  isScroolDirection: true,
                 );
               },
             ),

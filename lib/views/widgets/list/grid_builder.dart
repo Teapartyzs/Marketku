@@ -5,15 +5,18 @@ class GridBuilder<T> extends StatelessWidget {
       {super.key,
       required this.data,
       required this.onBuild,
-      required this.onTapAction});
+      required this.onTapAction,
+      required this.isScroolDirection});
 
   final List<T> data;
   final Function(T) onTapAction;
   final Widget Function(T) onBuild;
+  final bool isScroolDirection;
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+        scrollDirection: isScroolDirection ? Axis.vertical : Axis.horizontal,
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, crossAxisSpacing: 4, mainAxisSpacing: 16),
