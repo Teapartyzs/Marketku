@@ -16,4 +16,13 @@ class ProductController {
       throw e.response?.data;
     }
   }
+
+  Future<List<Product>> getAllProductByCategory(categoryName: String) async {
+    try {
+      final response = await "$ip/api/product-by-category/$categoryName".getDataList<Product>((value) => Product.fromMap(value));
+      return response;
+    } on DioException catch (e) {
+      throw e.response?.data;
+    }
+  }
 }
