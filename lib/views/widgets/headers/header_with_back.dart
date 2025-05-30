@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:marketku/views/helpers/custom_colors.dart';
+import 'package:get/get.dart';
+import 'package:marketku/utils/custom_colors.dart';
 
-class Header extends StatelessWidget {
-  const Header({super.key});
+class HeaderWithBack extends StatelessWidget {
+  const HeaderWithBack({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +17,25 @@ class Header extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover,
           ),
+          Positioned(
+            left: 16,
+            top: 78,
+            child: InkWell(
+              onTap: () {
+                Get.back();
+              },
+              child: Ink(
+                width: 31,
+                height: 31,
+                child: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
           const Positioned(
-            left: 48,
+            left: 58,
             top: 68,
             child: SizedBox(
               width: 250,

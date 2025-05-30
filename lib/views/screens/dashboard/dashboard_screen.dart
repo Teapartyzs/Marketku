@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/zondicons.dart';
-import 'package:marketku/views/helpers/custom_colors.dart';
+import 'package:marketku/utils/custom_colors.dart';
 import 'package:marketku/views/screens/dashboard/nav_screen/cart/cart_screen.dart';
 import 'package:marketku/views/screens/dashboard/nav_screen/favorite/favorite_screen.dart';
 import 'package:marketku/views/screens/dashboard/nav_screen/home/home_screen.dart';

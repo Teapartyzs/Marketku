@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_repository.dart';
+part of 'auth_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRepositoryHash() => r'19a3485653561ac2f781b997131430c5659286d1';
+String _$authRepositoryHash() => r'a0baa01b732b191855e72a1ce133aaa1a45b7429';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)
@@ -368,5 +368,20 @@ final signOutProvider = AutoDisposeFutureProvider<void>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SignOutRef = AutoDisposeFutureProviderRef<void>;
+String _$userNotifierHash() => r'49355f6602b7c55c1287ce19ea8d6a18f0caa1b4';
+
+/// See also [UserNotifier].
+@ProviderFor(UserNotifier)
+final userNotifierProvider =
+    AutoDisposeNotifierProvider<UserNotifier, User?>.internal(
+  UserNotifier.new,
+  name: r'userNotifierProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$userNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$UserNotifier = AutoDisposeNotifier<User?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

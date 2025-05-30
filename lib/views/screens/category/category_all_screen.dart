@@ -1,9 +1,8 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:marketku/controllers/network/category/category_controller.dart';
-import 'package:marketku/controllers/network/category_sub/category_sub_controller.dart';
-import 'package:marketku/global_variables.dart';
+import 'package:marketku/controllers/category/category_controller.dart';
+import 'package:marketku/controllers/category_sub/category_sub_controller.dart';
 import 'package:marketku/views/screens/product/product_screen.dart';
 import 'package:marketku/views/widgets/category/category_text_widget.dart';
 import 'package:marketku/views/widgets/category_sub/category_sub_widget.dart';

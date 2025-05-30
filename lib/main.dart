@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:marketku/providers/user/user_provider.dart';
+import 'package:marketku/providers/auth/auth_provider.dart';
 import 'package:marketku/views/screens/auth/login_screen.dart';
 import 'package:marketku/views/screens/dashboard/dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,9 +20,9 @@ class MyApp extends ConsumerWidget {
     final userJson = preferences.getString("user");
 
     if (token != null && userJson != null) {
-      ref.read(userProvider.notifier).setUser(userJson);
+      ref.read(userNotifierProvider.notifier).setUser(userJson);
     } else {
-      ref.read(userProvider.notifier).signOut();
+      ref.read(userNotifierProvider.notifier).signOut();
     }
   }
 
@@ -45,7 +43,7 @@ class MyApp extends ConsumerWidget {
                 child: CircularProgressIndicator(),
               );
             }
-            final user = ref.watch(userProvider);
+            final user = ref.watch(userNotifierProvider);
             return user != null ? const DashboardScreen() : const LoginScreen();
           }),
     );

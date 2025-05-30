@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:marketku/providers/auth/auth_provider.dart';
 import 'package:marketku/providers/loading/loading_provider.dart';
-import 'package:marketku/controllers/network/auth/auth_repository.dart';
-import 'package:marketku/views/helpers/custom_colors.dart';
+import 'package:marketku/utils/custom_colors.dart';
 
 class RegisterScreen extends ConsumerWidget {
   const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     late String email;
     late String fullname;
     late String password;
     bool isLoading = ref.watch(isLoadingProvider);
     void submitSignUp() async {
-      if (_formKey.currentState!.validate()) {
+      if (formKey.currentState!.validate()) {
         ref.read(isLoadingProvider.notifier).state = true;
         try {
           await ref.read(registerProvider(fullname, email, password).future);
@@ -42,7 +42,7 @@ class RegisterScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

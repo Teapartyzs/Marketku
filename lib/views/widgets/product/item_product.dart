@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:marketku/models/product/product.dart';
-import 'package:marketku/views/helpers/custom_colors.dart';
+import 'package:marketku/utils/custom_colors.dart';
 
 class ItemProduct extends StatelessWidget {
   const ItemProduct({super.key, required this.product});
@@ -9,14 +9,12 @@ class ItemProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return InkWell(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: 140,
-            width: 140,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white),
               color: CustomColors.secondary,
