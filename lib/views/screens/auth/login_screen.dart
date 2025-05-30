@@ -25,11 +25,9 @@ class LoginScreen extends ConsumerWidget {
         try {
           await ref.read(loginProvider(email, password).future);
           if (!context.mounted) return;
-          ref.read(isLoadingProvider.notifier).state = false;
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Login success!")),
           );
-
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const DashboardScreen()),
@@ -39,6 +37,8 @@ class LoginScreen extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Login failed: ${e.toString()}")),
           );
+        } finally {
+          ref.read(isLoadingProvider.notifier).state = false;
         }
       }
     }

@@ -1,6 +1,6 @@
 import 'package:marketku/global_variables.dart';
 import 'package:marketku/models/category_sub/category_sub.dart';
-import 'package:marketku/services/dio_controller.dart';
+import 'package:marketku/services/dio_service.dart';
 
 DioController _dioController = DioController();
 

@@ -22,13 +22,14 @@ class RegisterScreen extends ConsumerWidget {
         try {
           await ref.read(registerProvider(fullname, email, password).future);
           if (!context.mounted) return;
-          ref.read(isLoadingProvider.notifier).state = false;
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Register success")));
           Navigator.pop(context);
         } catch (e) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(e.toString())));
+        } finally {
+          ref.read(isLoadingProvider.notifier).state = false;
         }
       }
     }

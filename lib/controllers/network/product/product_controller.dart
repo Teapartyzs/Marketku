@@ -1,10 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_logs/flutter_logs.dart';
 import 'package:marketku/global_variables.dart';
 import 'package:marketku/models/product/product.dart';
-import 'package:marketku/services/dio_controller.dart';
-
-DioController _dioController = DioController();
+import 'package:marketku/services/dio_service.dart';
 
 class ProductController {
   Future<List<Product>> getAllProduct() async {
@@ -17,9 +14,10 @@ class ProductController {
     }
   }
 
-  Future<List<Product>> getAllProductByCategory(categoryName: String) async {
+  Future<List<Product>> getAllProductByCategory(String categoryName) async {
     try {
-      final response = await "$ip/api/product-by-category/$categoryName".getDataList<Product>((value) => Product.fromMap(value));
+      final response = await "$ip/api/product-by-category/$categoryName"
+          .getDataList<Product>((value) => Product.fromMap(value));
       return response;
     } on DioException catch (e) {
       throw e.response?.data;

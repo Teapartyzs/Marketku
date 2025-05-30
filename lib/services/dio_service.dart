@@ -2,9 +2,16 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:marketku/global_variables.dart';
 
 Dio getDio() {
-  final dio = Dio();
+  Dio dio;
+  BaseOptions options = BaseOptions(
+    baseUrl: ip,
+    connectTimeout: const Duration(seconds: 60),
+    receiveTimeout: const Duration(seconds: 60),
+  );
+  dio = Dio(options);
 
   dio.httpClientAdapter = IOHttpClientAdapter(
     createHttpClient: () {
@@ -18,7 +25,8 @@ Dio getDio() {
   return dio;
 }
 
-extension DioControllerExtension on String {
+//NEW
+extension DioServiceExtension on String {
   Future<void> postData<T>(
       Map map, void Function(T data, String message) onSuccess) async {
     try {
@@ -27,7 +35,7 @@ extension DioControllerExtension on String {
         onSuccess(response.data, response.statusMessage!);
       }
     } on DioException catch (e) {
-      throw Exception(e.response?.data.toString() ?? "Failed to send data");
+      throw Exception(e.message ?? "Failed to send data, try again");
     }
   }
 
@@ -39,11 +47,13 @@ extension DioControllerExtension on String {
       final List<T> result = rawData.map((value) => fromJson(value)).toList();
       return result;
     } on DioException catch (e) {
-      throw Exception(e.response?.data.toString() ?? "Failed to send data");
+      throw Exception(
+          e.response?.data.toString() ?? "Failed to get data, try again");
     }
   }
 }
 
+//OLD
 class DioController {
   Future<List<T>> getDataList<T>(
       {required String url,

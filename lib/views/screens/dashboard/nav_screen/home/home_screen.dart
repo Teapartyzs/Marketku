@@ -23,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _refreshKey = GlobalKey<RefreshIndicatorState>();
   final CategoryController _categoryController = CategoryController();
   final ProductController _productController = ProductController();
   late Future<List<Category>> categoryData;
@@ -55,8 +56,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             );
           }),
-      body: SingleChildScrollView(
-        child: Column(
+      body: RefreshIndicator(
+        key: _refreshKey,
+        onRefresh: () async {
+          categoryData = _categoryController.loadCategory();
+          productData = _productController.getAllProduct();
+          await Future.delayed(const Duration(seconds: 2));
+        },
+        color: Colors.blueAccent,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
           children: [
             const BannerWidget(),
             TitleTextWidget(

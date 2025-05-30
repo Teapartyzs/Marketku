@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/providers/user/user_provider.dart';
-import 'package:marketku/services/dio_controller.dart';
+import 'package:marketku/services/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../global_variables.dart';
