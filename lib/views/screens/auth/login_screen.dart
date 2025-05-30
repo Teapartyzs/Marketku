@@ -22,7 +22,7 @@ class LoginScreen extends ConsumerWidget {
         ref.read(isLoadingProvider.notifier).state = true;
 
         try {
-          await ref.read(loginProvider(email, password).future);
+          await ref.read(onLoginProvider(email, password).future);
           if (!context.mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Login success!")),

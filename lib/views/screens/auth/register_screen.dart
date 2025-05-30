@@ -20,7 +20,7 @@ class RegisterScreen extends ConsumerWidget {
       if (formKey.currentState!.validate()) {
         ref.read(isLoadingProvider.notifier).state = true;
         try {
-          await ref.read(registerProvider(fullname, email, password).future);
+          await ref.read(onRegisterProvider(fullname, email, password).future);
           if (!context.mounted) return;
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Register success")));

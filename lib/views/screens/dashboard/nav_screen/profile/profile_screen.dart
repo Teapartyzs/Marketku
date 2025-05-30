@@ -13,7 +13,7 @@ class ProfileScreen extends ConsumerWidget {
         body: FilledButton(
             onPressed: () async {
               try {
-                await ref.read(signOutProvider.future);
+                await ref.read(onSignOutProvider.future);
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Logout success")));

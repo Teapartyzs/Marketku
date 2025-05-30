@@ -23,7 +23,7 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
-String _$loginHash() => r'2433faa4eb466e65f98edcdca33c1d4e8b42408b';
+String _$onLoginHash() => r'563e7acae10aba74c84f17dd424fb1d3dbaebfc9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -46,29 +46,29 @@ class _SystemHash {
   }
 }
 
-/// See also [login].
-@ProviderFor(login)
-const loginProvider = LoginFamily();
+/// See also [onLogin].
+@ProviderFor(onLogin)
+const onLoginProvider = OnLoginFamily();
 
-/// See also [login].
-class LoginFamily extends Family<AsyncValue<void>> {
-  /// See also [login].
-  const LoginFamily();
+/// See also [onLogin].
+class OnLoginFamily extends Family<AsyncValue<void>> {
+  /// See also [onLogin].
+  const OnLoginFamily();
 
-  /// See also [login].
-  LoginProvider call(
+  /// See also [onLogin].
+  OnLoginProvider call(
     String email,
     String password,
   ) {
-    return LoginProvider(
+    return OnLoginProvider(
       email,
       password,
     );
   }
 
   @override
-  LoginProvider getProviderOverride(
-    covariant LoginProvider provider,
+  OnLoginProvider getProviderOverride(
+    covariant OnLoginProvider provider,
   ) {
     return call(
       provider.email,
@@ -88,34 +88,34 @@ class LoginFamily extends Family<AsyncValue<void>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'loginProvider';
+  String? get name => r'onLoginProvider';
 }
 
-/// See also [login].
-class LoginProvider extends AutoDisposeFutureProvider<void> {
-  /// See also [login].
-  LoginProvider(
+/// See also [onLogin].
+class OnLoginProvider extends AutoDisposeFutureProvider<void> {
+  /// See also [onLogin].
+  OnLoginProvider(
     String email,
     String password,
   ) : this._internal(
-          (ref) => login(
-            ref as LoginRef,
+          (ref) => onLogin(
+            ref as OnLoginRef,
             email,
             password,
           ),
-          from: loginProvider,
-          name: r'loginProvider',
+          from: onLoginProvider,
+          name: r'onLoginProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$loginHash,
-          dependencies: LoginFamily._dependencies,
-          allTransitiveDependencies: LoginFamily._allTransitiveDependencies,
+                  : _$onLoginHash,
+          dependencies: OnLoginFamily._dependencies,
+          allTransitiveDependencies: OnLoginFamily._allTransitiveDependencies,
           email: email,
           password: password,
         );
 
-  LoginProvider._internal(
+  OnLoginProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -131,12 +131,12 @@ class LoginProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(LoginRef provider) create,
+    FutureOr<void> Function(OnLoginRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: LoginProvider._internal(
-        (ref) => create(ref as LoginRef),
+      override: OnLoginProvider._internal(
+        (ref) => create(ref as OnLoginRef),
         from: from,
         name: null,
         dependencies: null,
@@ -150,12 +150,12 @@ class LoginProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   AutoDisposeFutureProviderElement<void> createElement() {
-    return _LoginProviderElement(this);
+    return _OnLoginProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is LoginProvider &&
+    return other is OnLoginProvider &&
         other.email == email &&
         other.password == password;
   }
@@ -172,7 +172,7 @@ class LoginProvider extends AutoDisposeFutureProvider<void> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin LoginRef on AutoDisposeFutureProviderRef<void> {
+mixin OnLoginRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `email` of this provider.
   String get email;
 
@@ -180,34 +180,34 @@ mixin LoginRef on AutoDisposeFutureProviderRef<void> {
   String get password;
 }
 
-class _LoginProviderElement extends AutoDisposeFutureProviderElement<void>
-    with LoginRef {
-  _LoginProviderElement(super.provider);
+class _OnLoginProviderElement extends AutoDisposeFutureProviderElement<void>
+    with OnLoginRef {
+  _OnLoginProviderElement(super.provider);
 
   @override
-  String get email => (origin as LoginProvider).email;
+  String get email => (origin as OnLoginProvider).email;
   @override
-  String get password => (origin as LoginProvider).password;
+  String get password => (origin as OnLoginProvider).password;
 }
 
-String _$registerHash() => r'000979ec5da880d3f8201ba4312ab6b19c56fb58';
+String _$onRegisterHash() => r'3f585eeb27e71319898dc0a770d95bca846e239a';
 
-/// See also [register].
-@ProviderFor(register)
-const registerProvider = RegisterFamily();
+/// See also [onRegister].
+@ProviderFor(onRegister)
+const onRegisterProvider = OnRegisterFamily();
 
-/// See also [register].
-class RegisterFamily extends Family<AsyncValue<void>> {
-  /// See also [register].
-  const RegisterFamily();
+/// See also [onRegister].
+class OnRegisterFamily extends Family<AsyncValue<void>> {
+  /// See also [onRegister].
+  const OnRegisterFamily();
 
-  /// See also [register].
-  RegisterProvider call(
+  /// See also [onRegister].
+  OnRegisterProvider call(
     String fullname,
     String email,
     String password,
   ) {
-    return RegisterProvider(
+    return OnRegisterProvider(
       fullname,
       email,
       password,
@@ -215,8 +215,8 @@ class RegisterFamily extends Family<AsyncValue<void>> {
   }
 
   @override
-  RegisterProvider getProviderOverride(
-    covariant RegisterProvider provider,
+  OnRegisterProvider getProviderOverride(
+    covariant OnRegisterProvider provider,
   ) {
     return call(
       provider.fullname,
@@ -237,37 +237,38 @@ class RegisterFamily extends Family<AsyncValue<void>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'registerProvider';
+  String? get name => r'onRegisterProvider';
 }
 
-/// See also [register].
-class RegisterProvider extends AutoDisposeFutureProvider<void> {
-  /// See also [register].
-  RegisterProvider(
+/// See also [onRegister].
+class OnRegisterProvider extends AutoDisposeFutureProvider<void> {
+  /// See also [onRegister].
+  OnRegisterProvider(
     String fullname,
     String email,
     String password,
   ) : this._internal(
-          (ref) => register(
-            ref as RegisterRef,
+          (ref) => onRegister(
+            ref as OnRegisterRef,
             fullname,
             email,
             password,
           ),
-          from: registerProvider,
-          name: r'registerProvider',
+          from: onRegisterProvider,
+          name: r'onRegisterProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$registerHash,
-          dependencies: RegisterFamily._dependencies,
-          allTransitiveDependencies: RegisterFamily._allTransitiveDependencies,
+                  : _$onRegisterHash,
+          dependencies: OnRegisterFamily._dependencies,
+          allTransitiveDependencies:
+              OnRegisterFamily._allTransitiveDependencies,
           fullname: fullname,
           email: email,
           password: password,
         );
 
-  RegisterProvider._internal(
+  OnRegisterProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -285,12 +286,12 @@ class RegisterProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(RegisterRef provider) create,
+    FutureOr<void> Function(OnRegisterRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: RegisterProvider._internal(
-        (ref) => create(ref as RegisterRef),
+      override: OnRegisterProvider._internal(
+        (ref) => create(ref as OnRegisterRef),
         from: from,
         name: null,
         dependencies: null,
@@ -305,12 +306,12 @@ class RegisterProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   AutoDisposeFutureProviderElement<void> createElement() {
-    return _RegisterProviderElement(this);
+    return _OnRegisterProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is RegisterProvider &&
+    return other is OnRegisterProvider &&
         other.fullname == fullname &&
         other.email == email &&
         other.password == password;
@@ -329,7 +330,7 @@ class RegisterProvider extends AutoDisposeFutureProvider<void> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin RegisterRef on AutoDisposeFutureProviderRef<void> {
+mixin OnRegisterRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `fullname` of this provider.
   String get fullname;
 
@@ -340,34 +341,34 @@ mixin RegisterRef on AutoDisposeFutureProviderRef<void> {
   String get password;
 }
 
-class _RegisterProviderElement extends AutoDisposeFutureProviderElement<void>
-    with RegisterRef {
-  _RegisterProviderElement(super.provider);
+class _OnRegisterProviderElement extends AutoDisposeFutureProviderElement<void>
+    with OnRegisterRef {
+  _OnRegisterProviderElement(super.provider);
 
   @override
-  String get fullname => (origin as RegisterProvider).fullname;
+  String get fullname => (origin as OnRegisterProvider).fullname;
   @override
-  String get email => (origin as RegisterProvider).email;
+  String get email => (origin as OnRegisterProvider).email;
   @override
-  String get password => (origin as RegisterProvider).password;
+  String get password => (origin as OnRegisterProvider).password;
 }
 
-String _$signOutHash() => r'7afaec0c1484379f26cea7d4ba7ca4767192159e';
+String _$onSignOutHash() => r'f422323ca0dc2672d708f04162dc2f509b2e69be';
 
-/// See also [signOut].
-@ProviderFor(signOut)
-final signOutProvider = AutoDisposeFutureProvider<void>.internal(
-  signOut,
-  name: r'signOutProvider',
+/// See also [onSignOut].
+@ProviderFor(onSignOut)
+final onSignOutProvider = AutoDisposeFutureProvider<void>.internal(
+  onSignOut,
+  name: r'onSignOutProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$signOutHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$onSignOutHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef SignOutRef = AutoDisposeFutureProviderRef<void>;
+typedef OnSignOutRef = AutoDisposeFutureProviderRef<void>;
 String _$userNotifierHash() => r'49355f6602b7c55c1287ce19ea8d6a18f0caa1b4';
 
 /// See also [UserNotifier].

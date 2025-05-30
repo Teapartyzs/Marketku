@@ -24,23 +24,24 @@ final bannerControllerProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef BannerControllerRef = AutoDisposeFutureProviderRef<BannerController>;
-String _$loadBannersHash() => r'a40707dddb3befe87f7120c47da81fe8a221ec3d';
+String _$onLoadBannersHash() => r'935f01ab097343bb1575a9433bb963f084ba735c';
 
-/// See also [loadBanners].
-@ProviderFor(loadBanners)
-final loadBannersProvider = AutoDisposeFutureProvider<void>.internal(
-  loadBanners,
-  name: r'loadBannersProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$loadBannersHash,
+/// See also [onLoadBanners].
+@ProviderFor(onLoadBanners)
+final onLoadBannersProvider = AutoDisposeFutureProvider<void>.internal(
+  onLoadBanners,
+  name: r'onLoadBannersProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$onLoadBannersHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef LoadBannersRef = AutoDisposeFutureProviderRef<void>;
-String _$bannerNotifierHash() => r'35e3fad5cbf6aef646f28ddf9953e4c884fd6e83';
+typedef OnLoadBannersRef = AutoDisposeFutureProviderRef<void>;
+String _$bannerNotifierHash() => r'c36861b502ed6e826616e4ddc0b6e51e65ce1e3e';
 
 /// See also [BannerNotifier].
 @ProviderFor(BannerNotifier)

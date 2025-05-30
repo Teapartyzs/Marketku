@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/global_variables.dart';
 import 'package:marketku/models/product/product.dart';
 import 'package:marketku/services/dio_service.dart';
 
 class ProductController {
+  final Ref ref;
+  ProductController({required this.ref});
   Future<List<Product>> getAllProduct() async {
     try {
       final response = await "$ip/api/popular-product"

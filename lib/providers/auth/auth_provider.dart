@@ -11,20 +11,20 @@ AuthRepository authRepository(Ref ref) {
 }
 
 @riverpod
-Future<void> login(Ref ref, String email, String password) async {
+Future<void> onLogin(Ref ref, String email, String password) async {
   final authRepository = ref.read(authRepositoryProvider);
   await authRepository.login(email, password);
 }
 
 @riverpod
-Future<void> register(
+Future<void> onRegister(
     Ref ref, String fullname, String email, String password) async {
   final authRepository = ref.read(authRepositoryProvider);
   await authRepository.register(fullname, email, password);
 }
 
 @riverpod
-Future<void> signOut(Ref ref) async {
+Future<void> onSignOut(Ref ref) async {
   final authRepository = ref.read(authRepositoryProvider);
   await authRepository.signOut();
 }

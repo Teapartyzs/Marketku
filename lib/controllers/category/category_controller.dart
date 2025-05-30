@@ -1,26 +1,16 @@
-import 'dart:convert';
-
-import 'package:marketku/global_variables.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/models/category/category.dart';
-import 'package:http/http.dart' as http;
+import 'package:marketku/providers/category/category_provider.dart';
+import 'package:marketku/services/dio_service.dart';
 
 class CategoryController {
-  Future<List<Category>> loadCategory() async {
+  final Ref ref;
+  CategoryController({required this.ref});
+  Future<void> loadCategory() async {
     try {
-      http.Response response = await http.get(
-        Uri.parse('$ip/api/category'),
-        headers: <String, String>{
-          "Content-Type": "application/json; charset=UTF-8"
-        },
-      );
-      if (response.statusCode == 200) {
-        List<dynamic> dataDecode = jsonDecode(response.body);
-        List<Category> result =
-            dataDecode.map((category) => Category.fromJson(category)).toList();
-        return result;
-      } else {
-        throw Exception("Failed to fetch category");
-      }
+      final category = await "/api/category"
+          .getDataList<Category>((value) => Category.fromJson(value));
+      ref.read(categoryNotifierProvider.notifier).setCategory(category);
     } catch (e) {
       throw Exception(e);
     }

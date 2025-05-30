@@ -2,11 +2,11 @@ import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:marketku/controllers/category/category_controller.dart';
 import 'package:marketku/controllers/product/product_controller.dart';
 import 'package:marketku/models/category/category.dart';
 import 'package:marketku/models/product/product.dart';
 import 'package:marketku/providers/banner/banner_provider.dart';
+import 'package:marketku/providers/category/category_provider.dart';
 import 'package:marketku/views/screens/category/category_all_screen.dart';
 import 'package:marketku/views/screens/category/category_screen.dart';
 import 'package:marketku/views/widgets/banner/banner_widget.dart';
@@ -23,21 +23,24 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
-  final CategoryController _categoryController = CategoryController();
   final ProductController _productController = ProductController();
-  late Future<List<Category>> categoryData;
   late Future<List<Product>> productData;
 
   @override
   void initState() {
     super.initState();
-    categoryData = _categoryController.loadCategory();
+    loadData();
+  }
+
+  void loadData() {
     productData = _productController.getAllProduct();
-    ref.read(loadBannersProvider.future);
+    ref.read(onLoadBannersProvider.future);
+    ref.read(onLoadCategoryProvider.future);
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Category> categoryData = ref.watch(categoryNotifierProvider);
     return Scaffold(
       appBar: AppBarWithSearchSwitch(
           onChanged: (value) {},
@@ -59,11 +62,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: RefreshIndicator(
         key: _refreshKey,
         onRefresh: () async {
-          setState(() {
-            categoryData = _categoryController.loadCategory();
-            productData = _productController.getAllProduct();
-          });
-          await ref.read(loadBannersProvider.future);
+          loadData();
           await Future.delayed(const Duration(seconds: 2));
         },
         color: Colors.blueAccent,
@@ -78,41 +77,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Get.to(() => const CategoryAllScreen());
               },
             ),
-            FutureBuilderSetup<List<Category>>(
-              data: categoryData,
-              onSuccess: (categories) {
-                return GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  shrinkWrap: true,
-                  itemCount: categories.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () =>
-                          Get.to(CategoryScreen(category: categories[index])),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: Image.network(
-                                height: 50, width: 50, categories[index].image),
-                          ),
-                          Text(
-                            categories[index].name,
-                            style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
+            GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              shrinkWrap: true,
+              itemCount: categoryData.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, crossAxisSpacing: 8, mainAxisSpacing: 8),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () =>
+                      Get.to(CategoryScreen(category: categoryData[index])),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: Image.network(
+                            height: 50, width: 50, categoryData[index].image),
                       ),
-                    );
-                  },
+                      Text(
+                        categoryData[index].name,
+                        style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
                 );
               },
             ),

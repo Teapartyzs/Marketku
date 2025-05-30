@@ -11,7 +11,7 @@ Future<BannerController> bannerController(Ref ref) async {
 }
 
 @riverpod
-Future<void> loadBanners(Ref ref) async {
+Future<void> onLoadBanners(Ref ref) async {
   final bannerController = await ref.read(bannerControllerProvider.future);
   await bannerController.loadBanners();
 }
@@ -24,6 +24,7 @@ class BannerNotifier extends _$BannerNotifier {
   }
 
   void setBanners(List<BannerModel> banners) {
+    clearBanners();
     state = banners;
   }
 
