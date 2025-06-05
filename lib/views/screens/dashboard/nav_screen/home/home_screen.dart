@@ -12,6 +12,7 @@ import 'package:marketku/views/screens/category/category_screen.dart';
 import 'package:marketku/views/widgets/banner/banner_widget.dart';
 import 'package:marketku/views/widgets/product/item_product.dart';
 import 'package:marketku/views/widgets/title_text_widget.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -20,24 +21,58 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
   late Future<List<Product>> productData;
+  var isLoading = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    loadData();
+    WidgetsBinding.instance.addObserver(this);
+    loadData(false);
   }
 
-  void loadData() {
-    ref.read(onLoadBannersProvider.future);
-    ref.read(onLoadCategoryProvider.future);
-    ref.read(onLoadProductProvider.future);
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      loadData(true);
+    }
+  }
+
+  void loadData(bool isRefresh) async {
+    try {
+      if (!isRefresh) {
+        setState(() {
+          isLoading = true;
+        });
+      }
+      await Future.wait([
+        ref.read(onLoadBannersProvider.future),
+        ref.read(onLoadCategoryProvider.future),
+        ref.read(onLoadProductProvider.future),
+      ]);
+    } catch (_) {
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     List<Category> categoryData = ref.watch(categoryNotifierProvider);
     List<Product> productData = ref.watch(productNotifierProvider);
     return Scaffold(
@@ -61,14 +96,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: RefreshIndicator(
         key: _refreshKey,
         onRefresh: () async {
-          loadData();
+          loadData(true);
           await Future.delayed(const Duration(seconds: 2));
         },
         color: Colors.blueAccent,
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
-            const BannerWidget(),
+            Skeletonizer(
+              enabled: isLoading,
+              child: const BannerWidget(),
+            ),
             TitleTextWidget(
               title: "Categories",
               subtitle: "View all",
@@ -76,53 +114,121 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Get.to(() => const CategoryAllScreen());
               },
             ),
-            GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              shrinkWrap: true,
-              itemCount: categoryData.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4, crossAxisSpacing: 8, mainAxisSpacing: 8),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () =>
-                      Get.to(CategoryScreen(category: categoryData[index])),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Image.network(
-                            height: 50, width: 50, categoryData[index].image),
-                      ),
-                      Text(
-                        categoryData[index].name,
-                        style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                );
-              },
+            Skeletonizer(
+              enabled: isLoading,
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                shrinkWrap: true,
+                itemCount: isLoading ? 4 : categoryData.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4, crossAxisSpacing: 8, mainAxisSpacing: 8),
+                itemBuilder: (context, index) {
+                  if (isLoading) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          height: 12,
+                          width: 40,
+                          color: Colors.grey[300],
+                        )
+                      ],
+                    );
+                  }
+                  return InkWell(
+                    onTap: () =>
+                        Get.to(CategoryScreen(category: categoryData[index])),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: Image.network(
+                              height: 50, width: 50, categoryData[index].image),
+                        ),
+                        Text(
+                          categoryData[index].name,
+                          style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
             TitleTextWidget(
                 title: "Popular", subtitle: "View all", onClickSubTitle: () {}),
-            GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              shrinkWrap: true,
-              itemCount: productData.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, crossAxisSpacing: 4, mainAxisSpacing: 16),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {},
-                  child: ItemProduct(product: productData[index]),
-                );
-              },
-            )
+            Skeletonizer(
+              enabled: isLoading,
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                shrinkWrap: true,
+                itemCount: isLoading ? 4 : productData.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 16),
+                itemBuilder: (context, index) {
+                  if (isLoading) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(8),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 12,
+                                  width: 100,
+                                  color: Colors.grey[400],
+                                ),
+                                const SizedBox(height: 8),
+                                Container(
+                                  height: 12,
+                                  width: 60,
+                                  color: Colors.grey[400],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return ItemProduct(product: productData[index]);
+                },
+              ),
+            ),
           ],
         ),
       ),
