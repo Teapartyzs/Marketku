@@ -1,7 +1,6 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:marketku/controllers/category_sub/category_sub_controller.dart';
 import 'package:marketku/providers/category/category_provider.dart';
 import 'package:marketku/views/screens/product/product_screen.dart';
@@ -27,16 +26,16 @@ class _CategoryAllScreenState extends ConsumerState<CategoryAllScreen> {
   void initState() {
     super.initState();
     ref.read(onLoadCategoryProvider.future);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    categoryData = ref.watch(categoryNotifierProvider);
+    categoryData = ref.read(categoryNotifierProvider);
     selectedCategory = categoryData.first;
     if (selectedCategory != null) {
       categorySubData =
           _categorySubController.onGetAllCategorySub(selectedCategory!.name);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarWithSearchSwitch(
         onChanged: (value) {},
@@ -111,10 +110,11 @@ class _CategoryAllScreenState extends ConsumerState<CategoryAllScreen> {
                           CategorySubWidget(
                             categorySubData: categorySubData,
                             onClick: (value) {
-                              Get.to(
-                                ProductScreen(
-                                  categorySubData: value,
-                                ),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductScreen(categorySubData: value)),
                               );
                             },
                           )

@@ -1,7 +1,6 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:marketku/models/category/category.dart';
 import 'package:marketku/models/product/product.dart';
 import 'package:marketku/providers/banner/banner_provider.dart';
@@ -10,7 +9,7 @@ import 'package:marketku/providers/product/product_provider.dart';
 import 'package:marketku/views/screens/category/category_all_screen.dart';
 import 'package:marketku/views/screens/category/category_screen.dart';
 import 'package:marketku/views/widgets/banner/banner_widget.dart';
-import 'package:marketku/views/widgets/product/item_product.dart';
+import 'package:marketku/views/widgets/product/list_product.dart';
 import 'package:marketku/views/widgets/title_text_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -111,7 +110,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               title: "Categories",
               subtitle: "View all",
               onClickSubTitle: () {
-                Get.to(() => const CategoryAllScreen());
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CategoryAllScreen(),
+                  ),
+                );
               },
             ),
             Skeletonizer(
@@ -147,8 +151,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     );
                   }
                   return InkWell(
-                    onTap: () =>
-                        Get.to(CategoryScreen(category: categoryData[index])),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CategoryScreen(category: categoryData[index])),
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -172,63 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
             TitleTextWidget(
                 title: "Popular", subtitle: "View all", onClickSubTitle: () {}),
-            Skeletonizer(
-              enabled: isLoading,
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                shrinkWrap: true,
-                itemCount: isLoading ? 4 : productData.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 16),
-                itemBuilder: (context, index) {
-                  if (isLoading) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(8),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 12,
-                                  width: 100,
-                                  color: Colors.grey[400],
-                                ),
-                                const SizedBox(height: 8),
-                                Container(
-                                  height: 12,
-                                  width: 60,
-                                  color: Colors.grey[400],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                  return ItemProduct(product: productData[index]);
-                },
-              ),
-            ),
+            ListProduct(isLoading: isLoading, productData: productData)
           ],
         ),
       ),
