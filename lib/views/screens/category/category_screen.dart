@@ -40,7 +40,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
       });
       _categorySub =
           _categorySubController.onGetAllCategorySub(widget.category.name);
-      ref.read(onLoadProductByCategoryProvider(widget.category.name).future);
+      // ref.read(onLoadProductByCategoryProvider(widget.category.name).future);
     } catch (_) {
     } finally {
       setState(() {
@@ -51,7 +51,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Product> productData = ref.watch(productNotifierProvider);
+    // List<Product> productData = ref.watch(productNotifierProvider);
     return Scaffold(
       appBar: AppBarWithSearchSwitch(
           onChanged: (value) {},
@@ -101,7 +101,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                   title: "Popular Product",
                   subtitle: "View all",
                   onClickSubTitle: () => {}),
-              ListProduct(isLoading: isLoading, productData: productData)
+              // ListProduct(isLoading: isLoading, productData: productData)
             ],
           ),
         ]),

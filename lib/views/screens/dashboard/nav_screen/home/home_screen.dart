@@ -9,7 +9,8 @@ import 'package:marketku/providers/product/product_provider.dart';
 import 'package:marketku/views/screens/category/category_all_screen.dart';
 import 'package:marketku/views/screens/category/category_screen.dart';
 import 'package:marketku/views/widgets/banner/banner_widget.dart';
-import 'package:marketku/views/widgets/product/list_product.dart';
+import 'package:marketku/views/widgets/product/item_product.dart';
+import 'package:marketku/views/widgets/product/loading/list_product_loading.dart';
 import 'package:marketku/views/widgets/title_text_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -56,10 +57,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           isLoading = true;
         });
       }
+      ref.read(productNotifierProvider.notifier).refreshGetAllProduct();
       await Future.wait([
         ref.read(onLoadBannersProvider.future),
         ref.read(onLoadCategoryProvider.future),
-        ref.read(onLoadProductProvider.future),
       ]);
     } catch (_) {
     } finally {
@@ -73,7 +74,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
     List<Category> categoryData = ref.watch(categoryNotifierProvider);
-    List<Product> productData = ref.watch(productNotifierProvider);
+    final productData = ref.watch(productNotifierProvider);
     return Scaffold(
       appBar: AppBarWithSearchSwitch(
           onChanged: (value) {},
@@ -180,7 +181,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
             TitleTextWidget(
                 title: "Popular", subtitle: "View all", onClickSubTitle: () {}),
-            ListProduct(isLoading: isLoading, productData: productData)
+            productData.when(
+              loading: () => const Center(
+                  child: SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator(),
+              )),
+              data: (product) => GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                shrinkWrap: true,
+                itemCount: product.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 16),
+                itemBuilder: (context, index) {
+                  return ItemProduct(product: product[index]);
+                },
+              ),
+              error: (Object error, StackTrace stackTrace) {
+                return AlertDialog(
+                  title: const Text('Error'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text(error.toString()),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Close'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            )
           ],
         ),
       ),
