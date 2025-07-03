@@ -1,7 +1,6 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:marketku/models/category/category.dart';
 import 'package:marketku/models/product/product.dart';
 import 'package:marketku/providers/banner/banner_provider.dart';
 import 'package:marketku/providers/category/category_provider.dart';
@@ -10,7 +9,6 @@ import 'package:marketku/views/screens/category/category_all_screen.dart';
 import 'package:marketku/views/screens/category/category_screen.dart';
 import 'package:marketku/views/widgets/banner/banner_widget.dart';
 import 'package:marketku/views/widgets/product/item_product.dart';
-import 'package:marketku/views/widgets/product/loading/list_product_loading.dart';
 import 'package:marketku/views/widgets/title_text_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -57,10 +55,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           isLoading = true;
         });
       }
-      ref.read(productNotifierProvider.notifier).refreshGetAllProduct();
+      ref
+          .read(productNotifierProvider.notifier)
+          .refreshFetchAllPopularProduct();
+      ref.read(categoryNotifierProvider.notifier).refreshFetchAllCategory();
       await Future.wait([
         ref.read(onLoadBannersProvider.future),
-        ref.read(onLoadCategoryProvider.future),
       ]);
     } catch (_) {
     } finally {
@@ -73,8 +73,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    List<Category> categoryData = ref.watch(categoryNotifierProvider);
     final productData = ref.watch(productNotifierProvider);
+    final categoryData = ref.watch(categoryNotifierProvider);
     return Scaffold(
       appBar: AppBarWithSearchSwitch(
           onChanged: (value) {},
@@ -119,44 +119,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 );
               },
             ),
-            Skeletonizer(
-              enabled: isLoading,
-              child: GridView.builder(
+            categoryData.when(
+              loading: () => const Center(
+                  child: SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator(),
+              )),
+              data: (category) => GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 shrinkWrap: true,
-                itemCount: isLoading ? 4 : categoryData.length,
+                itemCount: category.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4, crossAxisSpacing: 8, mainAxisSpacing: 8),
                 itemBuilder: (context, index) {
-                  if (isLoading) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          height: 12,
-                          width: 40,
-                          color: Colors.grey[300],
-                        )
-                      ],
-                    );
-                  }
                   return InkWell(
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              CategoryScreen(category: categoryData[index])),
+                              CategoryScreen(category: category[index])),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -164,10 +147,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       children: [
                         Flexible(
                           child: Image.network(
-                              height: 50, width: 50, categoryData[index].image),
+                              height: 50, width: 50, category[index].image),
                         ),
                         Text(
-                          categoryData[index].name,
+                          category[index].name,
                           style: const TextStyle(
                               fontSize: 12,
                               color: Colors.black,
@@ -178,6 +161,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   );
                 },
               ),
+              error: (Object error, StackTrace stackTrace) {
+                return AlertDialog(
+                  title: const Text('Error'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text(error.toString()),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Close'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
             ),
             TitleTextWidget(
                 title: "Popular", subtitle: "View all", onClickSubTitle: () {}),

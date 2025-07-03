@@ -1,1 +1,4 @@
-String ip = "http://192.168.2.77:3000";
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+var url = dotenv.env['URL'];
+String ip = "http://$url:3000";

@@ -22,17 +22,17 @@ class _CategoryAllScreenState extends ConsumerState<CategoryAllScreen> {
   late Future<List<CategorySub>> categorySubData;
   final CategorySubController _categorySubController = CategorySubController();
 
-  @override
-  void initState() {
-    super.initState();
-    ref.read(onLoadCategoryProvider.future);
-    categoryData = ref.read(categoryNotifierProvider);
-    selectedCategory = categoryData.first;
-    if (selectedCategory != null) {
-      categorySubData =
-          _categorySubController.onGetAllCategorySub(selectedCategory!.name);
-    }
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   ref.read(onLoadCategoryProvider.future);
+  //   categoryData = ref.read(categoryNotifierProvider);
+  //   selectedCategory = categoryData.first;
+  //   if (selectedCategory != null) {
+  //     categorySubData =
+  //         _categorySubController.onGetAllCategorySub(selectedCategory!.name);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

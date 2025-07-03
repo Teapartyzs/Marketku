@@ -1,18 +1,20 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 import 'package:marketku/models/category/category.dart';
-import 'package:marketku/providers/category/category_provider.dart';
 import 'package:marketku/services/dio_service.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class CategoryController {
-  final Ref ref;
-  CategoryController({required this.ref});
-  Future<void> loadCategory() async {
+  Future<List<Category>> loadCategory() async {
     try {
       final category = await "/api/category"
           .getDataList<Category>((value) => Category.fromJson(value));
-      ref.read(categoryNotifierProvider.notifier).setCategory(category);
-    } catch (e) {
-      throw Exception(e);
+      return category;
+    } on DioException catch (e) {
+      throw e.response?.data;
     }
   }
 }
+
+final categoryControllerProvider = Provider((ref) {
+  return CategoryController();
+});
