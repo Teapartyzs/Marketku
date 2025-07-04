@@ -6,7 +6,6 @@ import 'package:marketku/providers/auth/auth_provider.dart';
 import 'package:marketku/providers/loading/loading_provider.dart';
 import 'package:marketku/utils/custom_colors.dart';
 import 'package:marketku/views/screens/auth/register_screen.dart';
-import 'package:marketku/views/screens/dashboard/dashboard_screen.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -19,23 +18,10 @@ class LoginScreen extends ConsumerWidget {
     bool isLoading = ref.watch(isLoadingProvider);
     void submitSignIn() async {
       if (formKey.currentState!.validate()) {
-        ref.read(isLoadingProvider.notifier).state = true;
-
         try {
-          await ref.read(onLoginProvider(email, password).future);
-          if (!context.mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Login success!")),
-          );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const DashboardScreen()),
-          );
-        } catch (e) {
-          ref.read(isLoadingProvider.notifier).state = false;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Login failed: ${e.toString()}")),
-          );
+          ref.read(isLoadingProvider.notifier).state = true;
+          await ref.read(userNotifierProvider.notifier).signIn(email, password);
+        } catch (_) {
         } finally {
           ref.read(isLoadingProvider.notifier).state = false;
         }

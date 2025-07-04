@@ -27,15 +27,12 @@ Dio getDio() {
 
 //NEW
 extension DioServiceExtension on String {
-  Future<void> postData<T>(
-      Map map, void Function(T data, String message) onSuccess) async {
+  Future<T> postData<T>(Map map) async {
     try {
       final response = await getDio().post(this, data: map);
-      if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        onSuccess(response.data, response.statusMessage!);
-      }
+      return response.data;
     } on DioException catch (e) {
-      throw Exception(e.message ?? "Failed to send data, try again");
+      throw e.response?.data.toString() ?? "Failed to send data, try again";
     }
   }
 

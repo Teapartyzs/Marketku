@@ -18,16 +18,12 @@ class RegisterScreen extends ConsumerWidget {
     bool isLoading = ref.watch(isLoadingProvider);
     void submitSignUp() async {
       if (formKey.currentState!.validate()) {
-        ref.read(isLoadingProvider.notifier).state = true;
         try {
-          await ref.read(onRegisterProvider(fullname, email, password).future);
-          if (!context.mounted) return;
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Register success")));
-          Navigator.pop(context);
-        } catch (e) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(e.toString())));
+          ref.read(isLoadingProvider.notifier).state = true;
+          await ref
+              .read(userNotifierProvider.notifier)
+              .register(fullname, email, password);
+        } catch (_) {
         } finally {
           ref.read(isLoadingProvider.notifier).state = false;
         }
