@@ -1,16 +1,11 @@
-import 'dart:math';
-
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/controllers/category_sub/category_sub_controller.dart';
 import 'package:marketku/models/category/category.dart';
 import 'package:marketku/models/category_sub/category_sub.dart';
-import 'package:marketku/models/product/product.dart';
-import 'package:marketku/providers/product/product_provider.dart';
 import 'package:marketku/views/screens/product/product_screen.dart';
 import 'package:marketku/views/widgets/category_sub/category_sub_widget.dart';
-import 'package:marketku/views/widgets/product/list_product.dart';
 import 'package:marketku/views/widgets/title_text_widget.dart';
 
 class CategoryScreen extends ConsumerStatefulWidget {

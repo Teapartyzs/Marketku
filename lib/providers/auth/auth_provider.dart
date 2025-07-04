@@ -1,3 +1,5 @@
+// file: providers/auth/auth_provider.dart
+
 import 'package:marketku/controllers/auth/auth_controller.dart';
 import 'package:marketku/models/user/user.dart';
 import 'package:marketku/providers/error/error_provider_user.dart';
@@ -6,20 +8,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_provider.g.dart';
 
-@riverpod
+final authControllerProvider = Provider((ref) => AuthController());
+
+@Riverpod(keepAlive: true)
 class UserNotifier extends _$UserNotifier {
-  late AuthController _authController;
   @override
   Future<User?> build() async {
-    _authController = AuthController();
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final token = preferences.getString("token");
+    final preferences = await SharedPreferences.getInstance();
     final userJson = preferences.getString("user");
-    if (token != null && userJson != null) {
-      return User.fromJson(userJson);
-    } else {
-      return null;
+
+    if (userJson != null) {
+      try {
+        return User.fromJson(userJson);
+      } catch (e) {
+        return null;
+      }
     }
+
+    return null;
   }
 
   void setUser(String sourceJson) {
@@ -27,36 +33,38 @@ class UserNotifier extends _$UserNotifier {
   }
 
   Future<void> signIn(String email, String password) async {
+    final authController = ref.read(authControllerProvider);
     state = const AsyncLoading();
-    final response = await AsyncValue.guard(() async {
-      final userJson = await _authController.login(email, password);
-      return User.fromJson(userJson);
+    state = await AsyncValue.guard(() {
+      return authController.login(email, password);
     });
-    if (response.hasError) {
-      ref.read(errorNotifierProvider.notifier).setError(response.error!);
+
+    if (state.hasError) {
+      ref.read(errorNotifierProvider.notifier).setError(state.error!);
     }
-    state = response;
   }
 
   Future<void> register(String fullname, String email, String password) async {
+    final authController = ref.read(authControllerProvider);
     state = const AsyncLoading();
-    final response = await AsyncValue.guard(() async {
-      await _authController.register(fullname, email, password);
-      return true;
+
+    state = await AsyncValue.guard(() async {
+      await authController.register(fullname, email, password);
+      return null;
     });
-    if (response.hasError) {
-      ref.read(errorNotifierProvider.notifier).setError(response.error!);
+
+    if (state.hasError) {
+      ref.read(errorNotifierProvider.notifier).setError(state.error!);
     }
   }
 
   Future<void> signOut() async {
-    final response = await AsyncValue.guard(() async {
-      await _authController.signOut();
-      return true;
+    final authController = ref.read(authControllerProvider);
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      await authController.signOut();
+      return null;
     });
-    if (response.hasError) {
-      ref.read(errorNotifierProvider.notifier).setError(response.error!);
-    }
-    state = const AsyncData(null);
   }
 }

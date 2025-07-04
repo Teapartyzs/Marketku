@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:marketku/models/user/user.dart';
 
 class Auth {
@@ -16,4 +18,7 @@ class Auth {
   Map<String, dynamic> toJson() {
     return {'token': token, 'user': user.toJson()};
   }
+
+  factory Auth.fromJson(String source) =>
+      Auth.fromMap(jsonDecode(source) as Map<String, dynamic>);
 }

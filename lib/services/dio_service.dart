@@ -27,7 +27,7 @@ Dio getDio() {
 
 //NEW
 extension DioServiceExtension on String {
-  Future<T> postData<T>(Map map) async {
+  Future<T> postData<T>(Map<String, dynamic> map) async {
     try {
       final response = await getDio().post(this, data: map);
       return response.data;

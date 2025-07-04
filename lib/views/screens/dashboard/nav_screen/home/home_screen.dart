@@ -5,7 +5,6 @@ import 'package:marketku/models/product/product.dart';
 import 'package:marketku/providers/banner/banner_provider.dart';
 import 'package:marketku/providers/category/category_provider.dart';
 import 'package:marketku/providers/category/category_selected_provider.dart';
-import 'package:marketku/providers/error/error_provider.dart';
 import 'package:marketku/providers/product/product_provider.dart';
 import 'package:marketku/views/screens/category/category_all_screen.dart';
 import 'package:marketku/views/screens/category/category_screen.dart';
@@ -53,22 +52,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (categories.isNotEmpty) {
           ref.read(categorySelectedProvider.notifier).state = categories.first;
         }
-      }
-    });
-    ref.listen(errorProvider, (previousError, nextError) {
-      if (nextError != null && nextError != previousError) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Error"),
-            content: SingleChildScrollView(child: Text(nextError.toString())),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("Close"))
-            ],
-          ),
-        );
       }
     });
     final productData = ref.watch(productNotifierProvider);

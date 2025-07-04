@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/models/banner/banner_model.dart';
-import 'package:marketku/providers/banner/banner_provider.dart';
 import 'package:marketku/utils/custom_colors.dart';
 
 class BannerWidget extends ConsumerWidget {

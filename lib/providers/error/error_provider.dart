@@ -1,4 +1,3 @@
-import 'package:marketku/providers/auth/auth_provider.dart';
 import 'package:marketku/providers/banner/banner_provider.dart';
 import 'package:marketku/providers/category/category_provider.dart';
 import 'package:marketku/providers/category_sub/category_sub_provider.dart';
