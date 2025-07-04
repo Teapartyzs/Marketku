@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/controllers/banner/banner_controller.dart';
 import 'package:marketku/models/banner/banner_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -6,29 +5,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'banner_provider.g.dart';
 
 @riverpod
-Future<BannerController> bannerController(Ref ref) async {
-  return BannerController(ref);
-}
-
-@riverpod
-Future<void> onLoadBanners(Ref ref) async {
-  final bannerController = await ref.read(bannerControllerProvider.future);
-  await bannerController.loadBanners();
-}
-
-@riverpod
 class BannerNotifier extends _$BannerNotifier {
+  late BannerController _bannerController;
   @override
-  List<BannerModel> build() {
-    return [];
+  Future<List<BannerModel>> build() async {
+    _bannerController = BannerController();
+    return await _bannerController.loadBanners();
   }
 
-  void setBanners(List<BannerModel> banners) {
-    clearBanners();
-    state = banners;
-  }
-
-  void clearBanners() {
-    state = [];
+  Future<void> fetchBanners() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      return await _bannerController.loadBanners();
+    });
   }
 }

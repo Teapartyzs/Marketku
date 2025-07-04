@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/controllers/category/category_controller.dart';
 import 'package:marketku/models/category/category.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,7 +16,7 @@ class CategoryNotifier extends _$CategoryNotifier {
   Future<void> refreshFetchAllCategory() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return _categoryController.loadCategory();
+      return await _categoryController.loadCategory();
     });
   }
 }

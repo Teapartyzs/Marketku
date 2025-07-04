@@ -4,13 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/models/product/product.dart';
 import 'package:marketku/providers/banner/banner_provider.dart';
 import 'package:marketku/providers/category/category_provider.dart';
+import 'package:marketku/providers/category/category_selected_provider.dart';
+import 'package:marketku/providers/error/error_provider.dart';
 import 'package:marketku/providers/product/product_provider.dart';
 import 'package:marketku/views/screens/category/category_all_screen.dart';
 import 'package:marketku/views/screens/category/category_screen.dart';
 import 'package:marketku/views/widgets/banner/banner_widget.dart';
 import 'package:marketku/views/widgets/product/item_product.dart';
 import 'package:marketku/views/widgets/title_text_widget.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -19,34 +20,10 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen>
-    with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
   late Future<List<Product>> productData;
   var isLoading = false;
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    loadData(false);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      loadData(true);
-    }
-  }
 
   void loadData(bool isRefresh) async {
     try {
@@ -59,9 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           .read(productNotifierProvider.notifier)
           .refreshFetchAllPopularProduct();
       ref.read(categoryNotifierProvider.notifier).refreshFetchAllCategory();
-      await Future.wait([
-        ref.read(onLoadBannersProvider.future),
-      ]);
+      ref.read(bannerNotifierProvider.notifier).fetchBanners();
     } catch (_) {
     } finally {
       setState(() {
@@ -72,9 +47,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    ref.listen(categoryNotifierProvider, (previous, next) {
+      if (next is AsyncData) {
+        final categories = next.value!;
+        if (categories.isNotEmpty) {
+          ref.read(categorySelectedProvider.notifier).state = categories.first;
+        }
+      }
+    });
+    ref.listen(errorProvider, (previousError, nextError) {
+      if (nextError != null && nextError != previousError) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Error"),
+            content: SingleChildScrollView(child: Text(nextError.toString())),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Close"))
+            ],
+          ),
+        );
+      }
+    });
     final productData = ref.watch(productNotifierProvider);
     final categoryData = ref.watch(categoryNotifierProvider);
+    final bannerData = ref.watch(bannerNotifierProvider);
     return Scaffold(
       appBar: AppBarWithSearchSwitch(
           onChanged: (value) {},
@@ -103,10 +102,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
-            Skeletonizer(
-              enabled: isLoading,
-              child: const BannerWidget(),
-            ),
+            bannerData.when(
+                data: (banners) => BannerWidget(bannerData: banners),
+                loading: () => const Center(
+                      child: SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                error: (error, stack) =>
+                    const Text("Something went wrong with banner")),
             TitleTextWidget(
               title: "Categories",
               subtitle: "View all",

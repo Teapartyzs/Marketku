@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marketku/providers/category/category_provider.dart';
 import 'package:marketku/providers/category/category_selected_provider.dart';
 import 'package:marketku/providers/category_sub/category_sub_provider.dart';
+import 'package:marketku/providers/error/error_provider.dart';
 import 'package:marketku/views/screens/product/product_screen.dart';
 
 class CategoryAllScreen extends ConsumerStatefulWidget {
@@ -16,6 +17,22 @@ class CategoryAllScreen extends ConsumerStatefulWidget {
 class _CategoryAllScreenState extends ConsumerState<CategoryAllScreen> {
   @override
   Widget build(BuildContext context) {
+    ref.listen<Object?>(errorProvider, (previousError, nextError) {
+      if (nextError != null && nextError != previousError) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Error"),
+            content: SingleChildScrollView(child: Text(nextError.toString())),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Close"))
+            ],
+          ),
+        );
+      }
+    });
     final categoryData = ref.watch(categoryNotifierProvider);
     final categorySubData = ref.watch(categorySubNotifierProvider);
     final selectedCategory = ref.watch(categorySelectedProvider);
@@ -43,12 +60,6 @@ class _CategoryAllScreenState extends ConsumerState<CategoryAllScreen> {
                         onTap: () {
                           ref.read(categorySelectedProvider.notifier).state =
                               categories[index];
-
-                          if (selectedCategory != null) {
-                            ref
-                                .read(categorySubNotifierProvider.notifier)
-                                .fetchCategorySub(selectedCategory.name);
-                          }
                         },
                         title: Text(
                           categories[index].name,
@@ -181,24 +192,7 @@ class _CategoryAllScreenState extends ConsumerState<CategoryAllScreen> {
                                   )
                                 : const SizedBox(),
                             error: (Object error, StackTrace stackTrace) {
-                              return AlertDialog(
-                                title: const Text('Error'),
-                                content: SingleChildScrollView(
-                                  child: ListBody(
-                                    children: <Widget>[
-                                      Text(error.toString()),
-                                    ],
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text('Close'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
+                              return const SizedBox.shrink();
                             },
                             loading: () => const Center(
                               child: SizedBox(

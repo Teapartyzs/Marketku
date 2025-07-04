@@ -7,7 +7,7 @@ part of 'category_sub_provider.dart';
 // **************************************************************************
 
 String _$categorySubNotifierHash() =>
-    r'3e4abc4591cec5600a6499633bd30c1f6928145a';
+    r'b36931a61e9f6bc692b79d007b81d0d6211b3fad';
 
 /// See also [CategorySubNotifier].
 @ProviderFor(CategorySubNotifier)
