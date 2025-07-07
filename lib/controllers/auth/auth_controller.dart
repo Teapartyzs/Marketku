@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:marketku/models/user/auth.dart';
 import 'package:marketku/models/user/user.dart';
 import 'package:marketku/services/dio_service.dart';
@@ -15,7 +14,7 @@ class AuthController {
     final authData = Auth.fromMap(responseMap);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.setString("token", authData.token);
-    final userJson = jsonEncode(authData.user.toJson());
+    final userJson = authData.user.toJson();
     await preferences.setString("user", userJson);
 
     return authData.user;

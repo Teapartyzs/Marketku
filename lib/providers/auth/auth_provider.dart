@@ -1,5 +1,3 @@
-// file: providers/auth/auth_provider.dart
-
 import 'package:marketku/controllers/auth/auth_controller.dart';
 import 'package:marketku/models/user/user.dart';
 import 'package:marketku/providers/error/error_provider_user.dart';
@@ -16,10 +14,10 @@ class UserNotifier extends _$UserNotifier {
   Future<User?> build() async {
     final preferences = await SharedPreferences.getInstance();
     final userJson = preferences.getString("user");
-
     if (userJson != null) {
       try {
-        return User.fromJson(userJson);
+        final userData = User.fromJson(userJson);
+        return userData;
       } catch (e) {
         return null;
       }
